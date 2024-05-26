@@ -28,7 +28,7 @@ bool isTextOnly(QByteArray data, const QString& encoding, bool quickTest)
     }
 
     // Truncate to the first few bytes for quick testing
-    int testSize = quickTest? std::min(512, data.size()) : data.size();
+    qsizetype testSize = quickTest? std::min<qsizetype>(512, data.size()) : data.size();
 
     // If the quick test has been requested and we have to truncate the string, we have to use
     // an approach where truncated multibyte characters are not interpreted as invalid characters.
