@@ -9,6 +9,17 @@
 #include "csvparser.h"
 #include "TestImport.h"
 
+namespace {
+void setTextStreamEncoding(QTextStream& textStream, QString encodingName) {
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    textStream.setCodec(encodingName.toUtf8().constData());
+#else
+    const auto encoding = QStringConverter::encodingForName(encodingName.toUtf8().constData()).value();
+    textStream.setEncoding(encoding);
+#endif
+}
+}
+
 QTEST_MAIN(TestImport)
 
 TestImport::TestImport()
@@ -34,7 +45,7 @@ void TestImport::csvImport()
     QVERIFY(file.open());
     {
         QTextStream out(&file);
-        out.setCodec(encoding.toUtf8());
+        setTextStreamEncoding(out, encoding);
         out << csv;
     }
     file.flush();
@@ -42,7 +53,7 @@ void TestImport::csvImport()
     CSVParser csvparser(true, separator, quote);
     file.seek(0);
     QTextStream tstream(&file);
-    tstream.setCodec(encoding.toUtf8());
+    setTextStreamEncoding(tstream, encoding);
 
     std::vector<std::vector<QByteArray>> parsedCsv;
     int parsedCsvColumns = 0;

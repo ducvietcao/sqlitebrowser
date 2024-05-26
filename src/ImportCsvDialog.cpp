@@ -10,13 +10,18 @@
 #include <QProgressDialog>
 #include <QPushButton>
 #include <QDateTime>
-#include <QTextCodec>
 #include <QCompleter>
 #include <QComboBox>
 #include <QFile>
 #include <QTextStream>
 #include <QFileInfo>
 #include <memory>
+
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+#   include <QTextCodec>
+#else
+#   include <QStringConverter>
+#endif
 
 // Enable this line to show basic performance stats after each imported CSV file. Please keep in mind that while these
 // numbers might help to estimate the performance of the algorithm, this is not a proper benchmark.
@@ -25,6 +30,36 @@
 #ifdef CSV_BENCHMARK
 #include <QElapsedTimer>
 #endif
+
+namespace {
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+QStringList availableCodecs() {
+    return toStringList(QTextCodec::availableCodecs());
+}
+
+QTextCodec* encodingForName(QString name)
+{
+    return QTextCodec::codecForName(name.toUtf8().constData());
+}
+
+void setTextStreamEncoding(QTextStream& textStream, QString encodingName) {
+    textStream.setCodec(encodingForName(encodingName));
+}
+#else
+QStringList availableCodecs() {
+    return QStringEncoder::availableCodecs();
+}
+
+QStringConverter::Encoding encodingForName(QString name)
+{
+    return QStringConverter::encodingForName(name.toUtf8().constData()).value();
+}
+
+void setTextStreamEncoding(QTextStream& textStream, QString encodingName) {
+    textStream.setEncoding(encodingForName(encodingName));
+}
+#endif
+}
 
 QChar ImportCsvDialog::getSettingsChar(const std::string& group, const std::string& name)
 {
@@ -59,7 +94,7 @@ ImportCsvDialog::ImportCsvDialog(const std::vector<QString>& filenames, DBBrowse
     }
 
     // Create a list of all available encodings and create an auto completion list from them
-    encodingCompleter = new QCompleter(toStringList(QTextCodec::availableCodecs()), this);
+    encodingCompleter = new QCompleter(availableCodecs(), this);
     encodingCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     ui->editCustomEncoding->setCompleter(encodingCompleter);
 
@@ -398,7 +433,7 @@ CSVParser::ParserResult ImportCsvDialog::parseCSV(const QString &fileName, std::
         csv.setCSVProgress(new CSVImportProgress(file.size()));
 
     QTextStream tstream(&file);
-    tstream.setCodec(currentEncoding().toUtf8());
+    setTextStreamEncoding(tstream, currentEncoding());
 
     return csv.parse(rowFunction, tstream, count);
 }
