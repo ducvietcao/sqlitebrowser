@@ -318,5 +318,10 @@
   <slot>checkInput()</slot>
   <slot>updateSelection(bool)</slot>
   <slot>matchSimilar()</slot>
+  <slot>replace()</slot>
+  <slot>replaceAll()</slot>
+  <slot>findNext()</slot>
+  <slot>findAll()</slot>
+  <slot>buttonBox_clicked(QAbstractButton*)</slot>
  </slots>
 </ui>

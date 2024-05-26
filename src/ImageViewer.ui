@@ -189,5 +189,6 @@
  <slots>
   <slot>scaleImage(int)</slot>
   <slot>scaleToFitWindow(bool)</slot>
+  <slot>openPrintImageDialog()</slot>
  </slots>
 </ui>

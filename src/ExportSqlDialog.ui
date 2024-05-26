@@ -245,5 +245,7 @@
  <slots>
   <slot>showCustomCharEdits()</slot>
   <slot>whatChanged(int)</slot>
+  <slot>doSelectAll()</slot>
+  <slot>doDeselectAll()</slot>
  </slots>
 </ui>

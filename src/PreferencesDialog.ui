@@ -2439,7 +2439,7 @@ Can be set to 0 for disabling completion.</string>
   <slot>removeClientCertificate()</slot>
   <slot>chooseRemoteCloneDirectory()</slot>
   <slot>configureProxy()</slot>
-  <slot>buttonBoxClicked()</slot>
+  <slot>buttonBoxClicked(QAbstractButton*)</slot>
   <slot>showFileExtensionManager()</slot>
  </slots>
 </ui>

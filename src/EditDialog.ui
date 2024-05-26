@@ -639,5 +639,10 @@
   <slot>editTextChanged()</slot>
   <slot>editModeChanged(int)</slot>
   <slot>setNull()</slot>
+  <slot>copyHexAscii()</slot>
+  <slot>openPrintDialog()</slot>
+  <slot>setMustIndentAndCompact(bool)</slot>
+  <slot>setWordWrapping(bool)</slot>
+  <slot>switchEditorMode(bool)</slot>
  </slots>
 </ui>

@@ -1552,14 +1552,15 @@
   <slot>addRecord()</slot>
   <slot>deleteRecord()</slot>
   <slot>insertValues()</slot>
-  <slot>exportCsvFilteredTable</slot>
-  <slot>exportJsonFilteredTable</slot>
-  <slot>saveFilterAsView</slot>
+  <slot>exportCsvFilteredTable()</slot>
+  <slot>exportJsonFilteredTable()</slot>
+  <slot>saveFilterAsView()</slot>
   <slot>setDefaultTableEncoding()</slot>
   <slot>hideColumns()</slot>
   <slot>setTableEncoding()</slot>
   <slot>clearFilters()</slot>
   <slot>clearSorting()</slot>
   <slot>showAllColumns()</slot>
+  <slot>copyColumnName()</slot>
  </slots>
 </ui>

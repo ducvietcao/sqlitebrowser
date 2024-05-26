@@ -4013,5 +4013,17 @@ You can drag SQL statements from the Schema column and drop them into the SQL ed
   <slot>openLinkSqlCipherFaq()</slot>
   <slot>openLinkWebsite()</slot>
   <slot>openLinkDonatePatreon()</slot>
+  <slot>createSchemaDockContextMenu(QPoint)</slot>
+  <slot>setFindFrameVisibility(bool)</slot>
+  <slot>openFindReplaceDialog()</slot>
+  <slot>saveSqlResultsAsJson()</slot>
+  <slot>openSqlPrintDialog()</slot>
+  <slot>printDbStructure()</slot>
+  <slot>showStatusMessage5s(QString)</slot>
+  <slot>saveProjectAs()</slot>
+  <slot>closeFiles()</slot>
+  <slot>fileSaveAs()</slot>
+  <slot>saveAll()</slot>
+  <slot>toggleSqlBlockComment()</slot>
  </slots>
 </ui>
