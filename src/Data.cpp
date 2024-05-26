@@ -218,7 +218,7 @@ void removeCommentsFromQuery(QString& query)
 
             // If this is the closing quote character, switch back to normal state
             if((query.at(i) == quote) && (i == 0 || query.at(i-1) != '\\'))
-                quote = 0;
+                quote = QChar(0);
         }
     }
 
