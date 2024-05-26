@@ -29,18 +29,18 @@ SqlTextEdit::SqlTextEdit(QWidget* parent) :
     registerImage(SqlUiLexer::ApiCompleterIconIdSchema, QImage(":/icons/database"));
 
     // Remove command bindings that would interfere with our shortcutToggleComment
-    QsciCommand * command = standardCommands()->boundTo(Qt::ControlModifier+Qt::Key_Slash);
+    QsciCommand * command = standardCommands()->boundTo(Qt::ControlModifier | Qt::Key_Slash);
     command->setKey(0);
-    command = standardCommands()->boundTo(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Slash);
+    command = standardCommands()->boundTo(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_Slash);
     command->setKey(0);
 
     // Change command binding for Ctrl+T so it doesn't interfere with "Open tab"
-    command = standardCommands()->boundTo(Qt::ControlModifier+Qt::Key_T);
-    command->setKey(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Up);
+    command = standardCommands()->boundTo(Qt::ControlModifier | Qt::Key_T);
+    command->setKey(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_Up);
 
     // Change command binding for Ctrl+Shift+T so it doesn't interfere with "Open SQL file"
-    command = standardCommands()->boundTo(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_T);
-    command->setKey(Qt::ControlModifier+Qt::ShiftModifier+Qt::Key_Insert);
+    command = standardCommands()->boundTo(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_T);
+    command->setKey(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_Insert);
 
     QShortcut* shortcutToggleComment = new QShortcut(QKeySequence(tr("Ctrl+/")), this, nullptr, nullptr, Qt::WidgetShortcut);
     connect(shortcutToggleComment, &QShortcut::activated, this, &SqlTextEdit::toggleBlockComment);

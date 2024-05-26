@@ -36,7 +36,7 @@ EditDialog::EditDialog(QWidget* parent)
     ui->setupUi(this);
 
     // Add Ctrl-Enter (Cmd-Enter on OSX) as a shortcut for the Apply button
-    ui->buttonApply->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return));
+    ui->buttonApply->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return));
     ui->buttonApply->setToolTip(ui->buttonApply->toolTip() + " [" + ui->buttonApply->shortcut().toString(QKeySequence::NativeText) + "]");
 
     // Text editor
