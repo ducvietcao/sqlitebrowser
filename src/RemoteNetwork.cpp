@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QRegularExpression>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QMessageBox>
 #include <QtNetwork/QNetworkReply>
@@ -168,10 +169,10 @@ void RemoteNetwork::gotReply(QNetworkReply* reply)
             // Get last modified date as provided by the server
             QDateTime last_modified;
             QString content_disposition = reply->rawHeader("Content-Disposition");
-            QRegExp regex("^.*modification-date=\"(.+)\";.*$");
-            regex.setMinimal(true); // Set to non-greedy matching
-            if(regex.indexIn(content_disposition) != -1)
-                last_modified = QDateTime::fromString(regex.cap(1), Qt::ISODate);
+            QRegularExpression regex("^.*modification-date=\"(.+)\";.*$", QRegularExpression::InvertedGreedinessOption);
+            const auto m = regex.match(content_disposition);
+            if(m.hasMatch())
+                last_modified = QDateTime::fromString(m.captured(1), Qt::ISODate);
 
             // Extract all other information from reply and send it to slots
             emit fetchFinished(reply->url().fileName(),

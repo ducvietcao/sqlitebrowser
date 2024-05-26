@@ -57,35 +57,36 @@ std::vector<BufferRow> parseClipboard(QString clipboard)
 
     result.push_back(BufferRow());
 
-    QRegExp re("(\"(?:[^\t\"]+|\"\"[^\"]*\"\")*)\"|(\t|\r?\n)");
+    QRegularExpression re("(\"(?:[^\t\"]+|\"\"[^\"]*\"\")*)\"|(\t|\r?\n)");
     int offset = 0;
     int whitespace_offset = 0;
 
     while (offset >= 0) {
         QString text;
-        int pos = re.indexIn(clipboard, offset);
+        const auto m = re.match(clipboard, offset);
+        const int pos = m.capturedStart(0);
         if (pos < 0) {
             // insert everything that left
             text = clipboard.mid(whitespace_offset);
-            if(QRegExp("\".*\"").exactMatch(text))
+            if(QRegularExpression(QRegularExpression::anchoredPattern("\".*\"")).match(text).hasMatch())
                 text = text.mid(1, text.length() - 2);
             text.replace("\"\"", "\"");
             result.back().push_back(text.toUtf8());
             break;
         }
 
-        if (re.pos(2) < 0) {
-            offset = pos + re.cap(1).length() + 1;
+        if (m.capturedStart(2) < 0) {
+            offset = pos + m.capturedLength(1) + 1;
             continue;
         }
 
-        QString ws = re.cap(2);
+        QString ws = m.captured(2);
         // if two whitespaces in row - that's an empty cell
         if (!(pos - whitespace_offset)) {
             result.back().push_back(QByteArray());
         } else {
             text = clipboard.mid(whitespace_offset, pos - whitespace_offset);
-            if(QRegExp("\".*\"").exactMatch(text))
+            if(QRegularExpression(QRegularExpression::anchoredPattern("\".*\"")).match(text).hasMatch())
                 text = text.mid(1, text.length() - 2);
             text.replace("\"\"", "\"");
             result.back().push_back(text.toUtf8());
@@ -871,7 +872,7 @@ void ExtendedTableWidget::useAsFilter(const QString& filterOperator, bool binary
     // When Containing filter is requested (empty operator) and the value starts with
     // an operator character, the character is escaped.
     if (filterOperator.isEmpty())
-        value.replace(QRegExp("^(<|>|=|/)"), Settings::getValue("databrowser", "filter_escape").toString() + QString("\\1"));
+        value.replace(QRegularExpression("^(<|>|=|/)"), Settings::getValue("databrowser", "filter_escape").toString() + QString("\\1"));
 
     // If binary operator, the cell data is used as first value and
     // the second value must be added by the user.

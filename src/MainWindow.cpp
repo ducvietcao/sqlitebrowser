@@ -51,6 +51,7 @@
 #include <QPushButton>
 #include <QTemporaryFile>
 #include <QToolButton>
+#include <QRegularExpression>
 
 #ifdef Q_OS_MACX //Needed only on macOS
     #include <QOpenGLWidget>
@@ -3741,7 +3742,7 @@ void MainWindow::showContextMenuSqlTabBar(const QPoint& pos)
     QAction* actionDuplicate = new QAction(this);
     actionDuplicate->setText(tr("Duplicate Tab"));
     connect(actionDuplicate, &QAction::triggered, this, [this, tab]() {
-        QString tab_name = ui->tabSqlAreas->tabText(tab).remove("&").remove(QRegExp(" \\(\\d+\\)$"));
+        QString tab_name = ui->tabSqlAreas->tabText(tab).remove("&").remove(QRegularExpression(" \\(\\d+\\)$"));
         QString new_tab_name;
         for(int i=1;;i++)
         {
