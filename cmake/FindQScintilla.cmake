@@ -45,20 +45,20 @@
 # When using pkg-config, paths may contain odd slash placement. Each
 # include directory is pre-processed here. Resultant list variable
 # then used for search hinting. Depends on successful find_package(Qt5).
-set(Qt5QScintillaHintDirs)
+set(QScintillaHintDirs)
 if(UNIX)
-    foreach(item ${Qt5Widgets_INCLUDE_DIRS})
+    foreach(item ${Qt${QT_VERSION_MAJOR}Widgets_INCLUDE_DIRS})
         # remove slash at end of line
         STRING(REGEX REPLACE "\\/$" "" item ${item})
         # replace double slashes is single slashes
         STRING(REGEX REPLACE "\\/\\/" "/" item ${item})
-        list(APPEND Qt5QScintillaHintDirs "${item}/Qsci")
+        list(APPEND QScintillaHintDirs "${item}/Qsci")
     endforeach()
 endif()
 find_path ( QSCINTILLA_INCLUDE_DIR qsciscintilla.h
   HINTS /usr/local/include/Qsci
         /usr/local/opt/qscintilla2/include/Qsci
-        ${Qt5QScintillaHintDirs}
+        ${QScintillaHintDirs}
 )
 
 set ( QSCINTILLA_INCLUDE_DIRS ${QSCINTILLA_INCLUDE_DIR} )
@@ -92,7 +92,7 @@ if ( QScintilla_FIND_VERSION AND QSCINTILLA_VERSION_STRING )
 endif ()
 
 find_library ( QSCINTILLA_LIBRARY
-  NAMES qscintilla2 qscintilla2_qt5
+  NAMES qscintilla2 qscintilla2_qt${QT_VERSION_MAJOR}
   HINTS /usr/local/lib /usr/local/opt/qscintilla2/lib
 )
 

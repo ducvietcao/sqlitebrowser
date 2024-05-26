@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8.12.2)
 
-find_package(Qt5 REQUIRED COMPONENTS PrintSupport Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS PrintSupport Widgets)
 
 if(APPLE)
-    find_package(Qt5 REQUIRED COMPONENTS MacExtras)
+    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS MacExtras)
 endif()
 
 set(SOURCES
@@ -172,10 +172,10 @@ target_include_directories(qscintilla2 INTERFACE src)
 target_compile_definitions(qscintilla2 PRIVATE SCINTILLA_QT)
 target_compile_definitions(qscintilla2 PRIVATE DSCI_LEXER)
 
-target_link_libraries(qscintilla2 Qt5::Widgets Qt5::PrintSupport)
+target_link_libraries(qscintilla2 Qt::Widgets Qt::PrintSupport)
 
 if (APPLE)
-    target_link_libraries(qscintilla2 Qt5::MacExtras)
+    target_link_libraries(qscintilla2 Qt::MacExtras)
 endif()
 
 add_library(QScintilla::QScintilla ALIAS qscintilla2)

@@ -26,6 +26,7 @@ include(GNUInstallDirs)
 
 OPTION(BUILD_STABLE_VERSION "Don't build the stable version by default" OFF) # Choose between building a stable version or nightly (the default), depending on whether '-DBUILD_STABLE_VERSION=1' is passed on the command line or not.
 OPTION(ENABLE_TESTING "Enable the unit tests" OFF)
+OPTION(BUILD_WITH_QT6 "Build against Qt6 instead of Qt5" OFF)
 OPTION(FORCE_INTERNAL_JSON "Don't use the distribution's JSON library even if there is one" ON)
 OPTION(FORCE_INTERNAL_QSCINTILLA "Don't use the distribution's QScintilla library even if there is one" OFF)
 OPTION(FORCE_INTERNAL_QCUSTOMPLOT "Don't use distribution's QCustomPlot even if available" ON)
@@ -134,7 +135,29 @@ if(APPLE)
     endif()
 endif()
 
-find_package(Qt5 REQUIRED COMPONENTS Concurrent Gui LinguistTools Network PrintSupport Test Widgets Xml)
+if (BUILD_WITH_QT6)
+    set(QT_VERSION_MAJOR 6)
+    set(QT_DEFAULT_MAJOR_VERSION 6)
+    # target_compile_definitions(${PROJECT_NAME} PRIVATE QT_DISABLE_DEPRECATED_UP_TO=0x060700)
+    find_package(Qt6 REQUIRED COMPONENTS Concurrent Gui LinguistTools Network PrintSupport Test Widgets Xml Core5Compat)
+else()
+    set(QT_VERSION_MAJOR 5)
+    set(QT_DEFAULT_MAJOR_VERSION 5)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE QT_DISABLE_DEPRECATED_BEFORE=0x050F00)
+    find_package(Qt5 REQUIRED COMPONENTS Concurrent Gui LinguistTools Network PrintSupport Test Widgets Xml)
+endif()
+
+if(QT_VERSION_MAJOR EQUAL 5 AND Qt5Core_VERSION VERSION_LESS 5.15.0)
+    macro(qt_add_translation)
+        qt5_add_translation(${ARGN})
+    endmacro()
+    macro(qt_add_resources)
+        qt5_add_resources(${ARGN})
+    endmacro()
+    macro(qt_wrap_ui)
+        qt5_wrap_ui(${ARGN})
+    endmacro()
+endif()
 
 if(NOT FORCE_INTERNAL_JSON)
     find_package(nlohmann_json)
@@ -400,15 +423,15 @@ set(LICENSE_FILES
     LICENSE-PLUGINS
 )
 
-qt5_wrap_ui(SQLB_FORM_HDR ${SQLB_FORMS})
+qt_wrap_ui(SQLB_FORM_HDR ${SQLB_FORMS})
 if(SQLB_TSS)
     # add translations
     foreach(SQLB_TS ${SQLB_TSS})
         set_source_files_properties("${SQLB_TS}" PROPERTIES OUTPUT_LOCATION "${CMAKE_SOURCE_DIR}/src/translations")
     endforeach()
-    qt5_add_translation(SQLB_QMS ${SQLB_TSS})
+    qt_add_translation(SQLB_QMS ${SQLB_TSS})
 endif()
-qt5_add_resources(SQLB_RESOURCES_RCC ${SQLB_RESOURCES})
+qt_add_resources(SQLB_RESOURCES_RCC ${SQLB_RESOURCES})
 
 #icon and correct libs/subsystem for windows
 if(WIN32)
@@ -485,7 +508,12 @@ if(ALL_WARNINGS AND CMAKE_COMPILER_IS_GNUCC)
     endif()
 endif()
 
-set(QT_LIBS Qt5::Gui Qt5::Test Qt5::PrintSupport Qt5::Widgets Qt5::Network Qt5::Concurrent Qt5::Xml)
+if (QT_VERSION_MAJOR EQUAL 5)
+    set(QT_LIBS Qt5::Gui Qt5::Test Qt5::PrintSupport Qt5::Widgets Qt5::Network Qt5::Concurrent Qt5::Xml)
+endif()
+if (QT_VERSION_MAJOR EQUAL 6)
+    set(QT_LIBS Qt::Gui Qt::Test Qt::PrintSupport Qt::Widgets Qt::Network Qt::Concurrent Qt::Xml Qt6::Core5Compat)
+endif()
 
 target_link_libraries(${PROJECT_NAME}
     ${LPTHREAD}

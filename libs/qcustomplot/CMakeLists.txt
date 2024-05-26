@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.12.2)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5 REQUIRED COMPONENTS Widgets PrintSupport)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets PrintSupport)
 
 set(SOURCES
     qcustomplot.cpp
@@ -12,6 +12,6 @@ set(SOURCES
 
 add_library(qcustomplot ${SOURCES})
 target_include_directories(qcustomplot INTERFACE ${CMAKE_CURRENT_LIST_DIR})
-target_link_libraries(qcustomplot Qt5::Widgets Qt5::PrintSupport)
+target_link_libraries(qcustomplot Qt::Widgets Qt::PrintSupport)
 
 add_library(QCustomPlot::QCustomPlot ALIAS qcustomplot)
