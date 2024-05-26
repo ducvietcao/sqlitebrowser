@@ -2544,13 +2544,13 @@ void MainWindow::openLinkDonatePatreon() const
 
 static void loadCondFormatMap(BrowseDataTableSettings::CondFormatMap& condFormats, QXmlStreamReader& xml, const QString& encoding)
 {
-    const QStringRef name = xml.name();
+    const QStringView name = xml.name();
 
     while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != name) {
-        if (xml.name() == "column") {
+        if (xml.name() == QStringLiteral("column")) {
             size_t index = xml.attributes().value("index").toUInt();
-            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "column") {
-                if(xml.name() == "format") {
+            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("column")) {
+                if(xml.name() == QStringLiteral("format")) {
                     QFont font;
                     if (xml.attributes().hasAttribute("font"))
                         font.fromString(xml.attributes().value("font").toString());
@@ -2583,12 +2583,12 @@ static void loadBrowseDataTableSettings(BrowseDataTableSettings& settings, sqlb:
     if(xml.attributes().hasAttribute("freeze_columns"))
         settings.frozenColumns = xml.attributes().value("freeze_columns").toUInt();
 
-    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "table") {
-        if(xml.name() == "sort")
+    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("table")) {
+        if(xml.name() == QStringLiteral("sort"))
         {
-            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "sort")
+            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("sort"))
             {
-                if(xml.name() == "column")
+                if(xml.name() == QStringLiteral("column"))
                 {
                     int index = xml.attributes().value("index").toInt();
                     int mode = xml.attributes().value("mode").toInt();
@@ -2597,17 +2597,17 @@ static void loadBrowseDataTableSettings(BrowseDataTableSettings& settings, sqlb:
                     xml.skipCurrentElement();
                 }
             }
-        } else if(xml.name() == "column_widths") {
-            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "column_widths") {
-                if (xml.name() == "column") {
+        } else if(xml.name() == QStringLiteral("column_widths")) {
+            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("column_widths")) {
+                if (xml.name() == QStringLiteral("column")) {
                     int index = xml.attributes().value("index").toInt();
                     settings.columnWidths[index] = xml.attributes().value("value").toInt();
                     xml.skipCurrentElement();
                 }
             }
-        } else if(xml.name() == "filter_values") {
-            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "filter_values") {
-                if (xml.name() == "column") {
+        } else if(xml.name() == QStringLiteral("filter_values")) {
+            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("filter_values")) {
+                if (xml.name() == QStringLiteral("column")) {
                     size_t index = xml.attributes().value("index").toUInt();
                     QString value = xml.attributes().value("value").toString();
                     if(!value.isEmpty())
@@ -2615,33 +2615,33 @@ static void loadBrowseDataTableSettings(BrowseDataTableSettings& settings, sqlb:
                     xml.skipCurrentElement();
                 }
             }
-        } else if(xml.name() == "conditional_formats") {
+        } else if(xml.name() == QStringLiteral("conditional_formats")) {
             loadCondFormatMap(settings.condFormats, xml, settings.encoding);
-        } else if(xml.name() == "row_id_formats") {
+        } else if(xml.name() == QStringLiteral("row_id_formats")) {
             loadCondFormatMap(settings.rowIdFormats, xml, settings.encoding);
-        } else if(xml.name() == "display_formats") {
-            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "display_formats") {
-                if (xml.name() == "column") {
+        } else if(xml.name() == QStringLiteral("display_formats")) {
+            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("display_formats")) {
+                if (xml.name() == QStringLiteral("column")) {
                     size_t index = xml.attributes().value("index").toUInt();
                     settings.displayFormats[index] = xml.attributes().value("value").toString();
                     xml.skipCurrentElement();
                 }
             }
-        } else if(xml.name() == "hidden_columns") {
-            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "hidden_columns") {
-                if (xml.name() == "column") {
+        } else if(xml.name() == QStringLiteral("hidden_columns")) {
+            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("hidden_columns")) {
+                if (xml.name() == QStringLiteral("column")) {
                     int index = xml.attributes().value("index").toInt();
                     settings.hiddenColumns[index] = xml.attributes().value("value").toInt();
                     xml.skipCurrentElement();
                 }
             }
-        } else if(xml.name() == "plot_y_axes") {
-            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "plot_y_axes") {
+        } else if(xml.name() == QStringLiteral("plot_y_axes")) {
+            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("plot_y_axes")) {
                 QString y1AxisName;
                 QString y2AxisName;
                 PlotDock::PlotSettings y1AxisSettings;
                 PlotDock::PlotSettings y2AxisSettings;
-                if (xml.name() == "y_axis") {
+                if (xml.name() == QStringLiteral("y_axis")) {
                     y1AxisName = xml.attributes().value("name").toString();
                     y1AxisSettings.lineStyle = xml.attributes().value("line_style").toInt();
                     y1AxisSettings.pointShape = xml.attributes().value("point_shape").toInt();
@@ -2650,7 +2650,7 @@ static void loadBrowseDataTableSettings(BrowseDataTableSettings& settings, sqlb:
                     xml.skipCurrentElement();
                 }
                 settings.plotYAxes[0][y1AxisName] = y1AxisSettings;
-                if (xml.name() == "y2_axis") {
+                if (xml.name() == QStringLiteral("y2_axis")) {
                   y2AxisName = xml.attributes().value("name").toString();
                   y2AxisSettings.lineStyle = xml.attributes().value("line_style").toInt();
                   y2AxisSettings.pointShape = xml.attributes().value("point_shape").toInt();
@@ -2660,10 +2660,10 @@ static void loadBrowseDataTableSettings(BrowseDataTableSettings& settings, sqlb:
                 }
                 settings.plotYAxes[1][y2AxisName] = y2AxisSettings;
             }
-        } else if(xml.name() == "global_filter") {
-            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "global_filter")
+        } else if(xml.name() == QStringLiteral("global_filter")) {
+            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("global_filter"))
             {
-                if(xml.name() == "filter")
+                if(xml.name() == QStringLiteral("filter"))
                 {
                     QString value = xml.attributes().value("value").toString();
                     settings.globalFilters.push_back(value);
@@ -2693,7 +2693,7 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
         QXmlStreamReader xml(&file);
         xml.readNext();     // token == QXmlStreamReader::StartDocument
         xml.readNext();     // name == sqlb_project
-        if(xml.name() != "sqlb_project")
+        if(xml.name() != QStringLiteral("sqlb_project"))
             return NotValidFormat;
 
         // We are going to open a new project, so close the possible current one before opening another.
@@ -2712,7 +2712,7 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
             // Handle element start
             if(token == QXmlStreamReader::StartElement)
             {
-                if(xml.name() == "db")
+                if(xml.name() == QStringLiteral("db"))
                 {
                     // Read only?
                     if(xml.attributes().hasAttribute("readonly") && xml.attributes().value("readonly").toInt())
@@ -2742,43 +2742,43 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
                     if(xml.attributes().hasAttribute("synchronous"))
                         db.setPragma("synchronous", xml.attributes().value("synchronous").toString());
                     loadPragmas();
-                } else if(xml.name() == "attached") {
-                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "attached")
+                } else if(xml.name() == QStringLiteral("attached")) {
+                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("attached"))
                     {
-                        if(xml.name() == "db")
+                        if(xml.name() == QStringLiteral("db"))
                         {
                             db.attach(xml.attributes().value("path").toString(), xml.attributes().value("schema").toString());
                             xml.skipCurrentElement();
                         }
                     }
-                } else if(xml.name() == "window") {
+                } else if(xml.name() == QStringLiteral("window")) {
                     // Window settings
-                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "window")
+                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("window"))
                     {
-                        if(xml.name() == "main_tabs") {
+                        if(xml.name() == QStringLiteral("main_tabs")) {
                             // Currently open tabs
                             restoreOpenTabs(xml.attributes().value("open").toString());
                             // Currently selected open tab
                             ui->mainTab->setCurrentIndex(xml.attributes().value("current").toString().toInt());
                             xml.skipCurrentElement();
-                        } else if(xml.name() == "current_tab") {
+                        } else if(xml.name() == QStringLiteral("current_tab")) {
                             // Currently selected tab (3.11 or older format, first restore default open tabs)
                             restoreOpenTabs(defaultOpenTabs);
                             ui->mainTab->setCurrentIndex(xml.attributes().value("id").toString().toInt());
                             xml.skipCurrentElement();
                         }
                     }
-                } else if(xml.name() == "tab_structure") {
+                } else if(xml.name() == QStringLiteral("tab_structure")) {
                     // Database Structure tab settings
-                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "tab_structure")
+                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("tab_structure"))
                     {
-                        if(xml.name() == "column_width")
+                        if(xml.name() == QStringLiteral("column_width"))
                         {
                             // Tree view column widths
                             ui->dbTreeWidget->setColumnWidth(xml.attributes().value("id").toString().toInt(),
                                                              xml.attributes().value("width").toString().toInt());
                             xml.skipCurrentElement();
-                        } else if(xml.name() == "expanded_item") {
+                        } else if(xml.name() == QStringLiteral("expanded_item")) {
                             // Tree view expanded items
                             int parent = xml.attributes().value("parent").toString().toInt();
                             QModelIndex idx;
@@ -2790,16 +2790,16 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
                             xml.skipCurrentElement();
                         }
                     }
-                } else if(xml.name() == "tab_browse") {
+                } else if(xml.name() == QStringLiteral("tab_browse")) {
                     // Close all open tabs first. We call delete here to avoid the
                     // closed() signal being emitted which would open a new dock.
                     for(auto d : allTableBrowserDocks())
                         delete d;
 
                     // Browse Data tab settings
-                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "tab_browse")
+                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("tab_browse"))
                     {
-                        if(xml.name() == "current_table")
+                        if(xml.name() == QStringLiteral("current_table"))
                         {
                             // TODO This attribute was only created until version 3.12.0 which means we can remove support for this
                             // in the future.
@@ -2829,7 +2829,7 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
                                 newTableBrowserTab(currentTable);
 
                             xml.skipCurrentElement();
-                        } else if(xml.name() == "table") {
+                        } else if(xml.name() == QStringLiteral("table")) {
                             // New browser tab
                             sqlb::ObjectIdentifier table;
                             table.fromSerialised(xml.attributes().value("table").toString().toStdString());
@@ -2840,20 +2840,20 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
                             if(dock_id)
                                 dock->setObjectName("dockBrowse" + QString::number(dock_id));
 
-                            if(xml.attributes().value("custom_title").toString() == "1")
+                            if(xml.attributes().value("custom_title").toString() == QStringLiteral("1"))
                                 dock->setProperty("custom_title", true);
 
                             xml.skipCurrentElement();
-                        } else if(xml.name() == "dock_state") {
+                        } else if(xml.name() == QStringLiteral("dock_state")) {
                             // Dock state
                             ui->tabBrowsers->restoreState(QByteArray::fromHex(xml.attributes().value("state").toString().toUtf8()));
 
                             xml.skipCurrentElement();
-                        } else if(xml.name() == "default_encoding") {
+                        } else if(xml.name() == QStringLiteral("default_encoding")) {
                             // Default text encoding
                             TableBrowser::setDefaultEncoding(xml.attributes().value("codec").toString());
                             xml.skipCurrentElement();
-                        } else if(xml.name() == "browsetable_info") {
+                        } else if(xml.name() == QStringLiteral("browsetable_info")) {
                             // This tag is only found in old project files. In newer versions (>= 3.11) it is replaced by a new implementation.
                             // 3.12 is the last version to support loading this file format, so just show a warning here.
                             if(!Settings::getValue("idontcare", "projectBrowseTable").toBool())
@@ -2872,10 +2872,10 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
                             }
 
                             xml.skipCurrentElement();
-                        } else if(xml.name() == "browse_table_settings") {
+                        } else if(xml.name() == QStringLiteral("browse_table_settings")) {
 
-                            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "browse_table_settings") {
-                                if (xml.name() == "table") {
+                            while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("browse_table_settings")) {
+                                if (xml.name() == QStringLiteral("table")) {
 
                                     sqlb::ObjectIdentifier tableIdentifier =
                                         sqlb::ObjectIdentifier (xml.attributes().value("schema").toString().toStdString(),
@@ -2896,15 +2896,15 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
                         }
 
                     }
-                } else if(xml.name() == "tab_sql") {
+                } else if(xml.name() == QStringLiteral("tab_sql")) {
                     // Close all open tabs first
                     for(int i=ui->tabSqlAreas->count()-1;i>=0;i--)
                         closeSqlTab(i, true);
 
                     // Execute SQL tab data
-                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != "tab_sql")
+                    while(xml.readNext() != QXmlStreamReader::EndElement && xml.name() != QStringLiteral("tab_sql"))
                     {
-                        if(xml.name() == "sql")
+                        if(xml.name() == QStringLiteral("sql"))
                         {
                             // SQL editor tab
                             int index = openSqlTab();
@@ -2920,7 +2920,7 @@ MainWindow::LoadAttempResult MainWindow::loadProject(QString filename, bool read
                                 sqlEditor->setText(xml.readElementText());
                                 sqlEditor->setModified(false);
                             }
-                        } else if(xml.name() == "current_tab") {
+                        } else if(xml.name() == QStringLiteral("current_tab")) {
                             // Currently selected tab
                             ui->tabSqlAreas->setCurrentIndex(xml.attributes().value("id").toString().toInt());
                             xml.skipCurrentElement();
